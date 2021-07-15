@@ -1,23 +1,32 @@
 package pl.pawel.icfreq.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.sql.Date;
 
+@Entity
 public class TrainFrequency {
 
     public TrainFrequency() {
     }
 
-    public TrainFrequency(String from, String to, String frequency, int number, Date dateOfRunning, Date dataDownload) {
-        this.from = from;
-        this.to = to;
+    public TrainFrequency(String fromStation, String toStation, String frequency, int number, Date dateOfRunning, Date dataDownload) {
+        this.fromStation = fromStation;
+        this.toStation = toStation;
         this.frequency = frequency;
         this.number = number;
         this.dateOfRunning = dateOfRunning;
         this.dataDownload = dataDownload;
     }
 
-    String from;
-    String to;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    String fromStation;
+    String toStation;
     String frequency;
     int number;
     String category;
@@ -32,20 +41,20 @@ public class TrainFrequency {
         this.category = category;
     }
 
-    public String getFrom() {
-        return from;
+    public String getFromStation() {
+        return fromStation;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
+    public void setFromStation(String from) {
+        this.fromStation = from;
     }
 
-    public String getTo() {
-        return to;
+    public String getToStation() {
+        return toStation;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setToStation(String to) {
+        this.toStation = to;
     }
 
     public String getFrequency() {
@@ -83,8 +92,8 @@ public class TrainFrequency {
     @Override
     public String toString() {
         return "Frekwencja{" +
-                "stacja początkowa='" + from + '\'' +
-                ", stacja końcowa='" + to + '\'' +
+                "stacja początkowa='" + fromStation + '\'' +
+                ", stacja końcowa='" + toStation + '\'' +
                 ", numer pociągu=" + number +
                 ", kategoria='" + category + '\'' +
                 ", frekwencja='" + frequency + '\'' +
