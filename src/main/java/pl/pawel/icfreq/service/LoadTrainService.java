@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+import pl.pawel.icfreq.model.TrainFrequency;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -48,20 +49,28 @@ public class LoadTrainService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(doc.body());
-
+        TrainFrequency trainFrequency = new TrainFrequency();
+//        System.out.println(doc.body());
         Elements elements1 = doc.getElementsByClass("_TableFreqCol-Available");
         elements1.add(doc.getElementsByClass("_TableFreqCol-80").get(0));
         elements1.forEach(element -> {
-            System.out.println("{");
+//            System.out.println("{");
             Elements elements2 = element.getElementsByClass("m Col");
-            System.out.println(elements2.get(1).text());
-            System.out.println(elements2.get(2).text());
-            System.out.println(elements2.get(3).text());
-            Attributes attributes = elements2.get(0).attributes();
-            System.out.println(attributes.get("title"));
-            System.out.println("}");
+            trainFrequency.setDataDownload(new Date(System.currentTimeMillis()));
+            trainFrequency.setDateOfRunning(date);
+            trainFrequency.setNumber(Integer.parseInt(elements2.get(1).text()));
+            trainFrequency.setCategory(elements2.get(2).text());
+            trainFrequency.setFrom(element.getElementsByClass("m Col freq-no-border").get(0).text());
+            trainFrequency.setTo(elements2.get(3).text());
+            trainFrequency.setFrequency(elements2.get(0).attributes().get("title"));
+//            System.out.println(elements2.get(1).text());
+//            System.out.println(elements2.get(2).text());
+//            System.out.println(element.getElementsByClass("m Col freq-no-border").get(0).text());
+//            System.out.println(elements2.get(3).text());
+//            Attributes attributes = elements2.get(0).attributes();
+//            System.out.println(attributes.get("title"));
+//            System.out.println("}");
         });
+        System.out.println(trainFrequency);
     }
 }

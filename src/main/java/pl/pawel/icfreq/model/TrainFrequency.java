@@ -2,12 +2,12 @@ package pl.pawel.icfreq.model;
 
 import java.sql.Date;
 
-public class Train {
+public class TrainFrequency {
 
-    public Train() {
+    public TrainFrequency() {
     }
 
-    public Train(String from, String to, String frequency, int number, Date dateOfRunning, Date dataDownload) {
+    public TrainFrequency(String from, String to, String frequency, int number, Date dateOfRunning, Date dataDownload) {
         this.from = from;
         this.to = to;
         this.frequency = frequency;
@@ -20,9 +20,17 @@ public class Train {
     String to;
     String frequency;
     int number;
+    String category;
     Date dateOfRunning;
     Date dataDownload;
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public String getFrom() {
         return from;
@@ -70,5 +78,18 @@ public class Train {
 
     public void setDataDownload(Date dataDownload) {
         this.dataDownload = dataDownload;
+    }
+
+    @Override
+    public String toString() {
+        return "Frekwencja{" +
+                "stacja początkowa='" + from + '\'' +
+                ", stacja końcowa='" + to + '\'' +
+                ", numer pociągu=" + number +
+                ", kategoria='" + category + '\'' +
+                ", frekwencja='" + frequency + '\'' +
+                ", data kursowania=" + dateOfRunning +
+                ", data pobrania danych=" + dataDownload +
+                '}';
     }
 }
