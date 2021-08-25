@@ -1,5 +1,6 @@
 package pl.pawel.icfreq.service;
 
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
@@ -15,8 +16,10 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Service
 public class LoadTrainService {
+
 
     @Autowired
     private TrainFrequencyRepository trainFrequencyRepository;
@@ -47,7 +50,7 @@ public class LoadTrainService {
         System.out.println(title);
     }
 
-    public void loadOneTrainAndSave(Date date, Integer trainNumber){
+    public TrainFrequency loadOneTrainAndSave(Date date, Integer trainNumber){
         Document doc = null;
         try {
             doc = Jsoup.connect("https://www.intercity.pl/pl/site/dla-pasazera/informacje/frekwencja.html?location="+trainNumber.toString()+"&page=1&date="+date.toString()+"&category%5Beic_premium%5D=eip&category%5Beic%5D=eic&category%5Bic%5D=ic&category%5Btlk%5D=tlk").get();
@@ -57,7 +60,14 @@ public class LoadTrainService {
         TrainFrequency trainFrequency = new TrainFrequency();
 //        System.out.println(doc.body());
         Elements elements1 = doc.getElementsByClass("_TableFreqCol-Available");
-        elements1.add(doc.getElementsByClass("_TableFreqCol-80").get(0));
+        if (doc.getElementsByClass("_TableFreqCol-80").size()>0)
+        {
+            elements1.add(doc.getElementsByClass("_TableFreqCol-80").get(0));
+        }
+        if (doc.getElementsByClass("_TableFreqCol-90").size()>0)
+        {
+            elements1.add(doc.getElementsByClass("_TableFreqCol-90").get(0));
+        }
         elements1.forEach(element -> {
 //            System.out.println("{");
             Elements elements2 = element.getElementsByClass("m Col");
@@ -76,8 +86,15 @@ public class LoadTrainService {
 //            System.out.println(attributes.get("title"));
 //            System.out.println("}");
         });
-
-        trainFrequencyRepository.save(trainFrequency);
-        System.out.println(trainFrequency);
+        TrainFrequency freqExist = trainFrequencyRepository.findTrainFrequencyByNumberAndDataDownloadAndDateOfRunning(trainFrequency.getNumber(), trainFrequency.getDataDownload(), trainFrequency.getDateOfRunning());
+        TrainFrequency savedFreq=null;
+        if (freqExist==null)
+        {
+            savedFreq=trainFrequencyRepository.save(trainFrequency);
+        }else {
+            savedFreq=trainFrequency;
+        }
+//        System.out.println(trainFrequency);
+        return savedFreq;
     }
 }
